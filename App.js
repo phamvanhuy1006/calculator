@@ -10,7 +10,7 @@ export default class App extends Component {
             resultText: "",
             calculateText: ""
         }
-        this.operations = ['C','Del','%','/', '*', '+', '-', '=']
+        this.operations = ['C','Del','%','/', '*', '+', '-','+-', '=']
     } 
 
     calculateResult() {
@@ -26,6 +26,7 @@ export default class App extends Component {
             case '-':
             case '*':
             case '/':
+            case '%':
                 return false
         }
         return true
@@ -57,6 +58,8 @@ export default class App extends Component {
             case '-':
             case '*':
             case '/':
+            case '+-':
+            case '%':
                 const lastChar = this.state.resultText.split('').pop()
 
                 if(this.operations.indexOf(lastChar) > 0) return
@@ -74,18 +77,18 @@ export default class App extends Component {
         let ctrl = []
         let controll = ['C','Del','%']
         for(let i = 0; i < 3; i++) {
-            ctrl.push(<TouchableOpacity style={styles.btn} onPress={() => this.operate(controll[i])}>
-                <Text style={[styles.btnText, styles.colorBrown]}>{controll[i]}</Text>
+            ctrl.push(<TouchableOpacity style={[styles.btn]} onPress={() => this.operate(controll[i])}>
+                <Text style={[styles.btnText, styles.colorBrown, styles.buttonsCal]}>{controll[i]}</Text>
             </TouchableOpacity>)
         }
-        rows.push(<View style={styles.row}>{ctrl}</View>)
+        rows.push(<View style={[styles.row, styles.backgroundOperation]}>{ctrl}</View>)
 
-        let nums = [[7,8,9], [4,5,6], [1,2,3], [0,'','.']]
+        let nums = [[7,8,9], [4,5,6], [1,2,3], ['+-',0,'.']]
         for(let i = 0; i < 4; i++) {
             let row = []
             for(let j = 0; j < 3; j++) {
                 row.push(<TouchableOpacity onPress={() =>this.buttonPressed(nums[i][j])} style={styles.btn}>
-                    <Text style={styles.btnText}>{nums[i][j]}</Text>
+                    <Text style={[styles.btnText, styles.buttonsCal, styles.backGroundNumber]}>{nums[i][j]}</Text>
                 </TouchableOpacity>)
             }
             rows.push(<View style={styles.row}>{row}</View>)
@@ -95,12 +98,15 @@ export default class App extends Component {
         let ops = []
         for(let i = 0; i < 5; i++) {
             ops.push(<TouchableOpacity style={styles.btn} onPress={() => this.operate(operations[i])}>
-                <Text style={[styles.btnText, styles.colorBrown]}>{operations[i]}</Text>
+                <Text style={[styles.btnText, styles.colorBrown, styles.buttonsCal]}>{operations[i]}</Text>
             </TouchableOpacity>)
         }
 
         return (
             <View style={styles.container}>
+                <View style={styles.titleAlign}>
+                    <Text style={styles.title}>Calculator</Text>
+                </View>
                 <View style={styles.result}>
                     <Text style={styles.resultText}>{this.state.resultText}</Text>
                 </View>
@@ -111,7 +117,7 @@ export default class App extends Component {
                     <View style={styles.numbers}>
                         {rows}
                     </View>
-                    <View style={styles.operations}>
+                    <View style={[styles.operations, styles.backgroundOperation]}>
                         {ops}
                     </View>
                 </View>
@@ -124,6 +130,16 @@ export default class App extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    titleAlign: {
+        flex: 1,
+        maxHeight: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    title: {
+        fontSize: 35,
+        
     },
     row: {
         flexDirection: 'row',
@@ -141,23 +157,25 @@ const styles = StyleSheet.create({
     },
     result: {
         flex: 2,
-        backgroundColor: 'red',
-        justifyContent: 'space-around',
+        backgroundColor: 'white',
+        justifyContent: 'flex-end',
         alignItems: 'flex-end',
+
     },
     resultText: {
         fontSize: 30,
-        color: 'white',
+        color: 'black',
     },
     calculation: {
         flex: 1,
-        backgroundColor: 'green',
+        backgroundColor: 'white',
         alignItems: 'flex-end',
         justifyContent: 'space-around',
     },
     calculationText: {
-        fontSize: 24,
-        color: 'white',
+        fontSize: 35,
+        color: 'black',
+        fontWeight: 'bold'
     },
     buttons: {
         flex: 7,
@@ -165,15 +183,26 @@ const styles = StyleSheet.create({
     },
     numbers: {
         flex: 3,
-        backgroundColor: 'yellow'
+        backgroundColor: 'white'
     },
     operations: {
         flex: 1,
         justifyContent: 'space-around',
-        backgroundColor: 'black'
     },
     colorBrown: {
         color: 'brown'
+    },
+    backGroundNumber: {
+        backgroundColor: '#CCCCCC'
+    },
+    buttonsCal: {
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        backgroundColor: '#FFCC66',
+        width: 60,
+        height: 'auto',
+        textAlign: 'center',
     }
-
 });
